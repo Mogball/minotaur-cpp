@@ -18,6 +18,7 @@ public:
 	Vector2i operator*(const int a);
 
     std::ostream& operator<<(std::ostream& os);
+	const std::string to_string();
 };
 
 #endif // VECTOR2I_H

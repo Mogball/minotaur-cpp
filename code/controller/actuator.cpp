@@ -3,9 +3,9 @@
 
 #include "actuator.h"
 
-Actuator::Actuator(const QString& serial_port,
-    const PortSettings& settings, QextSerialPort::QueryMode mode) :
-    Controller(1, 1), m_serial_port(new QextSerialPort(serial_port, settings, mode)) {
+Actuator::Actuator(const QString &serial_port,
+                   const PortSettings &settings, QextSerialPort::QueryMode mode) :
+        Controller(1, 1), m_serial_port(new QextSerialPort(serial_port, settings, mode)) {
 
     //on successful connection
     if (m_serial_port->lastError() == 0) {
@@ -13,19 +13,19 @@ Actuator::Actuator(const QString& serial_port,
         m_serial_port->flush();
         // Send a renumbering request for the devices
         resetDeviceNumber();
-    }
-    else {
-        Logger::log("ERROR: " + serial_port.toStdString() + " could not be opened! " + m_serial_port->errorString().toStdString(), Logger::ERROR);
+    } else {
+        Logger::log("ERROR: " + serial_port.toStdString() + " could not be opened! "
+                    + m_serial_port->errorString().toStdString(), Logger::ERROR);
     }
 }
 
 // Copy constructor
-Actuator::Actuator(const Actuator& other) :
-    Controller(other.m_invert_x, other.m_invert_y),
-    m_x_device(other.m_x_device), m_y_device(other.m_y_device),
-    m_serial_port(other.m_serial_port) {}
+Actuator::Actuator(const Actuator &other) :
+        Controller(other.m_invert_x, other.m_invert_y),
+        m_x_device(other.m_x_device), m_y_device(other.m_y_device),
+        m_serial_port(other.m_serial_port) {}
 
-char* const Actuator::convertDataToBytes(long int data) {
+char *const Actuator::convertDataToBytes(long int data) {
     if (data < 0) {
         data = intPow(BYTE_RANGE, 4) + data;
     }
@@ -42,7 +42,7 @@ char* const Actuator::convertDataToBytes(long int data) {
 }
 
 void Actuator::resetDeviceNumber() {
-    char instr[] = { 0, ZaberCmd::RENUMBER, 0, 0, 0, 0 };
+    char instr[] = {0, ZaberCmd::RENUMBER, 0, 0, 0, 0};
 
     m_serial_port->write(instr);
 
@@ -59,7 +59,7 @@ int const Actuator::intPow(int x, int p) {
     else return x * tmp * tmp;
 }
 
-int Actuator::setSerPort(const QString& serial_port) {
+int Actuator::setSerPort(const QString &serial_port) {
     if (m_serial_port->portName() == serial_port) {
         return 0;
     }
@@ -77,7 +77,7 @@ int Actuator::setSerPort(const QString& serial_port) {
     return 0;
 }
 
-int Actuator::changeSettings(const PortSettings& settings) {
+int Actuator::changeSettings(const PortSettings &settings) {
     m_serial_port->setBaudRate(settings.BaudRate);
     m_serial_port->setDataBits(settings.DataBits);
     m_serial_port->setParity(settings.Parity);
@@ -104,7 +104,10 @@ Actuator::~Actuator() {
 
 void Actuator::move(Vector2i dir, int timer) {
     bool success = true;
-    Logger::log("Attempting move (" + std::to_string(dir.x_comp) + ", " + std::to_string(dir.y_comp) + ")", Logger::DEBUG);
+#ifndef NDEBUG
+    Logger::log("Attempting move (" + std::to_string(dir.x_comp) + ", " + std::to_string(dir.y_comp) + ")",
+                Logger::DEBUG);
+#endif
     try {
         std::future<void> x_thread(std::async(&Actuator::moveActuator, this, m_x_device, dir.x_comp, timer));
         std::future<void> y_thread(std::async(&Actuator::moveActuator, this, m_y_device, dir.y_comp, timer));
@@ -112,24 +115,27 @@ void Actuator::move(Vector2i dir, int timer) {
         x_thread.get();
         y_thread.get();
     }
-    catch (std::exception& e) {
+    catch (std::exception &e) {
         Logger::log(e.what(), Logger::ERROR);
         success = false;
     }
     catch (char const *e) {
+#ifndef NDEBUG
         Logger::log(e, Logger::DEBUG);
         success = false;
+#endif
     }
     catch (...) {
+#ifndef NDEBUG
         Logger::log("Unexpected exception", Logger::DEBUG);
         success = false;
+#endif
     }
 
     if (success) {
-        Logger::log("Moved { " + std::to_string(dir.x_comp) + ", " + std::to_string(dir.y_comp) + " } in " + std::to_string(timer) + " milliseconds.", Logger::INFO);
-    }
-    else {
-        Logger::log("The movement { " + std::to_string(dir.x_comp) + ", " + std::to_string(dir.y_comp) + " } could not be completed.", Logger::ERROR);
+        Logger::log("Moved " + dir.to_string() + " in " + std::to_string(timer) + " milliseconds.", Logger::INFO);
+    } else {
+        Logger::log("The movement " + dir.to_string() + " could not be completed.", Logger::ERROR);
     }
 }
 
@@ -139,13 +145,13 @@ void Actuator::moveActuator(const unsigned char device, const int value, const i
         if (value != 0) {
             sleep_step = std::chrono::milliseconds(t / value); // still need to test negative steps
         }
-        char* instr = new char(CMD_SIZE + DATA_SIZE);
+        char *instr = new char(CMD_SIZE + DATA_SIZE);
 
         // Setup device and command numbers
         instr[0] = device;
         instr[1] = ZaberCmd::REL_MOVE;
 
-        char* data = convertDataToBytes(STEP_FACTOR);
+        char *data = convertDataToBytes(STEP_FACTOR);
 
         for (int i = 0; i < DATA_SIZE; i++) {
             instr[i + 2] = data[i];
@@ -156,7 +162,8 @@ void Actuator::moveActuator(const unsigned char device, const int value, const i
             if (m_serial_port->isOpen()) {
                 m_serial_port->write(instr, CMD_SIZE + DATA_SIZE);
             } else {
-                Logger::log("ERROR: Failed to write to serial port " + (m_serial_port->portName()).toStdString() + " because it's not open.", Logger::ERROR);
+                Logger::log("ERROR: Failed to write to serial port " + (m_serial_port->portName()).toStdString() +
+                            " because it's not open.", Logger::ERROR);
                 throw "Action could not be completed"; // TODO: Might want to figure out a better way than throwing exceptions, revisit after adding concurrency
             }
 

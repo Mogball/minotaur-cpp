@@ -30,11 +30,12 @@ public:
 public slots:
     void openActuatorSetup();
     void openSimulator();
+    inline void switchToActuator() { switchControllerTo(Controller::Type::ACTUATOR); }
+    inline void switchToSimulator() { switchControllerTo(Controller::Type::SIMULATOR); }
 
 private slots:
     // Button click events
     void on_move_button_clicked();
-    void on_controller_button_clicked();
     // Mouse events
     void mousePressEvent(QMouseEvent *event);
 
@@ -47,6 +48,7 @@ private:
 	std::shared_ptr<Simulator> m_simulator;
     Controller::Type m_controller_type;
 	bool eventFilter(QObject*, QEvent*);
+    void switchControllerTo(Controller::Type const type);
 };
 
 #endif // MAINWINDOW_H

@@ -18,10 +18,12 @@ SimulatorScene::~SimulatorScene() {
 }
 
 void SimulatorScene::update() {
-	Logger::log("Beginning graphic scene update", Logger::DEBUG);
 	Vector2i robot_pos = *m_simulator_controller->getRobotPos();
+#ifndef NDEBUG
+	Logger::log("Beginning graphic scene update", Logger::DEBUG);
 	Logger::log("Robot position (" + std::to_string(robot_pos.x_comp) + ", " + std::to_string(robot_pos.y_comp) + ")",
 	            Logger::DEBUG);
+#endif
 	robot_graphics->setX(robot_pos.x_comp);
 	robot_graphics->setY(robot_pos.y_comp);
 	QGraphicsScene::update(QRectF(-800, -800, 1600, 1600));
