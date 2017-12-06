@@ -32,6 +32,7 @@ public:
     void bind_controller(std::shared_ptr<Controller> *controller_ptr);
     // Send a movement to the active controller
     bool send_movement(Vector2i &move_vector, int dt);
+    bool send_actuation(int actuator, int delay, int duration);
 };
 
 namespace Embedded {
@@ -45,6 +46,14 @@ namespace Embedded {
         Vector2i move_vector(x, y);
         bool res = EmbeddedController::getInstance().send_movement(move_vector, dt);
         return PyLong_FromLong(res);
+    }
+
+    // Embedded actuation function
+    static PyObject *emb_actuate(PyObject *, PyObject *args) {
+        int actuator = 0;
+        int delay = 0;
+        int duration = 1000;
+
     }
 
     // Embedded python configuration which describes which methods

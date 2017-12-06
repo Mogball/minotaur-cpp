@@ -87,5 +87,9 @@ void Controller::move(Dir dir, int timer) {
 }
 
 void Controller::move(Vector2i vec, int timer) {
+    performMove(vec, timer);
+}
 
+void Controller::actuate(int actuator, int duration, int delay) {
+    performActuation(actuator, duration, delay);
 }

@@ -45,7 +45,7 @@ public:
 
     void move(Dir dir, int timer = STEP_TIME);
     void move(Vector2i dir, int timer = STEP_TIME);
-
+    void actuate(int actuator, int duration = 1000, int delay = 0);
 
     void suspendKeyboard(bool suspend);
     void keyPressed(int key);
