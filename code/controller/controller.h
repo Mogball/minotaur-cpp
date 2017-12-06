@@ -45,6 +45,7 @@ public:
 
     void move(Dir dir, int timer = STEP_TIME);
     void move(Vector2i dir, int timer = STEP_TIME);
+    void moveTo(int x, int y, int duration = 1000, int delay = 0);
     void actuate(int actuator, int duration = 1000, int delay = 0);
 
     void suspendKeyboard(bool suspend);
@@ -65,6 +66,7 @@ protected:
 
     virtual void performMove(Vector2i vec, int timer) = 0;
     virtual void performActuation(int actuator, int duration, int delay) = 0;
+    virtual void performMoveTo(double x, double y, int duration, int delay);
 };
 
 #endif // CONTROLLER_H

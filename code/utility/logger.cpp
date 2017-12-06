@@ -1,7 +1,7 @@
 #include "logger.h"
 
 std::string Logger::m_buffer;
-QTextEdit *Logger::m_outfield = NULL;
+QTextEdit *Logger::m_outfield = nullptr;
 
 void Logger::setStream(QTextEdit *log_stream) {
     Logger::m_outfield = log_stream;
@@ -20,4 +20,16 @@ bool Logger::log(std::string message, LogType type) {
         std::cout << m_buffer << std::endl;
     }
     return true;
+}
+
+bool Logger::info(std::string message) {
+    Logger::log(message, Logger::INFO);
+}
+
+bool Logger::debug(std::string message) {
+    Logger::log(message, Logger::DEBUG);
+}
+
+bool Logger::fatal(std::string message) {
+    Logger::log(message, Logger::FATAL);
 }

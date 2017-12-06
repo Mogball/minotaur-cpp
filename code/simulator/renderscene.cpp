@@ -11,6 +11,7 @@ RenderScene::RenderScene(std::shared_ptr<Simulator> simulator, QWidget *parent)
         : QOpenGLWidget(parent),
           m_simulator(std::move(simulator)),
           m_sam(this, MU_SF, 1e-3f, 0.01f) {
+    m_simulator->setRenderScene(this);
     m_elapsed = 0;
     setAutoFillBackground(false);
 

@@ -17,6 +17,9 @@ public:
         NUM_LOG_TYPES
     };
     static bool log(std::string message, LogType type = INFO);
+    static bool debug(std::string message);
+    static bool info(std::string message);
+    static bool fatal(std::string message);
     static void setStream(QTextEdit* log_stream);
 
 private:

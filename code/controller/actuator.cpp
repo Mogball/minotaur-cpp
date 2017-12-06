@@ -184,4 +184,8 @@ void Actuator::performActuation(int actuator, int duration, int delay) {
     // TODO
 }
 
+void Actuator::performMoveTo(double x, double y, int duration, int delay) {
+    // TODO
+}
+
 //TODO: Add static method for getting current configuration of a given port

@@ -90,6 +90,11 @@ void Controller::move(Vector2i vec, int timer) {
     performMove(vec, timer);
 }
 
+void Controller::moveTo(int x, int y, int duration, int delay) {
+    double scale = 100;
+    performMoveTo(x / scale, y / scale, duration, delay);
+}
+
 void Controller::actuate(int actuator, int duration, int delay) {
     performActuation(actuator, duration, delay);
 }

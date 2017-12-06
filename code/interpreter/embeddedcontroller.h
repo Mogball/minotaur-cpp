@@ -30,9 +30,10 @@ public:
 
     // Set a controller as the active controller
     void bind_controller(std::shared_ptr<Controller> *controller_ptr);
-    // Send a movement to the active controller
+
     bool send_movement(Vector2i &move_vector, int dt);
-    bool send_actuation(int actuator, int delay, int duration);
+    bool send_actuation(int actuator, int duration, int delay);
+    bool send_movement_to(int x, int y, int duration, int delay);
 };
 
 namespace Embedded {
@@ -59,11 +60,23 @@ namespace Embedded {
         return PyLong_FromLong(res);
     }
 
+    static PyObject *emb_move_to(PyObject *, PyObject *args) {
+        int x = 0;
+        int y = 0;
+        int duration = 1000;
+        int delay = 0;
+        if (!PyArg_ParseTuple(args, "ii|ii", &x, &y, &duration, &delay))
+            return PyLong_FromLong(-1);
+        bool res = EmbeddedController::getInstance().send_movement_to(x, y, duration, delay);
+        return PyLong_FromLong(res);
+    }
+
     // Embedded python configuration which describes which methods
     // should be exposed in which module
     static PyMethodDef emb_methods[]{
             {"move",  emb_move, METH_VARARGS, "Send move command to active controller."},
             {"actuate", emb_actuate, METH_VARARGS, "Send actuate command to active controller."},
+            {"moveto", emb_move_to, METH_VARARGS, "Send move to command to active controller."},
             {nullptr, nullptr, 0, nullptr}
     };
     // Method 'move' is exposed in module 'emb' as 'emb.move'

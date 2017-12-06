@@ -44,6 +44,7 @@ public:
 protected:
     void performMove(Vector2i dir, int timer) override;
     void performActuation(int actuator, int duration, int delay) override;
+    void performMoveTo(double x, double y, int duration, int delay) override;
 
 private:
     QextSerialPort* m_serial_port;
