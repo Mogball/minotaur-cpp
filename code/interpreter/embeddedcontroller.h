@@ -53,9 +53,9 @@ namespace Embedded {
         int actuator = 0;
         int delay = 0;
         int duration = 1000;
-        if (!PyArg_ParseTuple(args, "i|ii", &actuator, &delay, &duration))
+        if (!PyArg_ParseTuple(args, "i|ii", &actuator, &duration, &delay))
             return PyLong_FromLong(-1);
-        bool res = EmbeddedController::getInstance().send_actuation(actuator, delay, duration);
+        bool res = EmbeddedController::getInstance().send_actuation(actuator, duration, delay);
         return PyLong_FromLong(res);
     }
 

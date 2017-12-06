@@ -10,6 +10,10 @@ void Simulator::performMove(Vector2i vec, int timer) {
 }
 
 void Simulator::performActuation(int actuator, int duration, int delay) {
+#ifndef NDEBUG
+    Logger::log("Actuating [" + std::to_string(actuator) + "] for " + std::to_string(duration) +  " after " + std::to_string(delay), Logger::DEBUG);
+#endif
+
     int actuator_keys[] = {Qt::Key_Left, Qt::Key_Right, Qt::Key_Up, Qt::Key_Down};
     if (actuator < 0) { actuator = 0; }
     else if (actuator > 3) { actuator = 3; }

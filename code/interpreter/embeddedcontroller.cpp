@@ -14,8 +14,8 @@ bool EmbeddedController::send_movement(Vector2i &move_vector, int dt) {
     return true;
 }
 
-bool EmbeddedController::send_actuation(int actuator, int delay, int duration) {
+bool EmbeddedController::send_actuation(int actuator, int duration, int delay) {
     if (!m_controller_ptr || !*m_controller_ptr) { return false; }
-    (*m_controller_ptr)->actuate(actuator, delay, duration);
+    (*m_controller_ptr)->actuate(actuator, duration, delay);
     return true;
 }
