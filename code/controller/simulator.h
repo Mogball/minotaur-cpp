@@ -19,9 +19,22 @@ protected:
     void performActuation(int actuator, int duration, int delay) override;
 };
 
-class TimerDelegate : public QObject {
+class TimerActionDelegate : public QObject {
 Q_OBJECT
+public:
+    explicit TimerActionDelegate(Simulator *simulator, int key, int delay, int duration);
+    void execute();
+    void destroy();
 
+protected Q_SLOTS:
+    void doKeyPress();
+    void doKeyRelease();
+
+private:
+    Simulator *m_simulator;
+    int m_key;
+    int m_delay;
+    int m_duration;
 };
 
 #endif // SIMULATOR_H
