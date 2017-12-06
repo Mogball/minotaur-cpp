@@ -42,9 +42,12 @@ public:
     // Common robot functions
     static Vector2i toVec2(Dir);
     void invertAxis(Axis);
-    void move(Dir dir, int timer = STEP_TIME);
-    virtual void move(Vector2i dir, int timer = STEP_TIME) = 0;
 
+    void move(Dir dir, int timer = STEP_TIME);
+    void move(Vector2i dir, int timer = STEP_TIME);
+
+
+    void suspendKeyboard(bool suspend);
     void keyPressed(int key);
     void keyReleased(int key);
     bool isKeyDown(int key);
@@ -53,10 +56,15 @@ protected:
     typedef typename std::unordered_map<int, bool> key_map;
     typedef typename std::pair<int, bool> key_press;
 
+    key_map m_key_map{50};
+    bool m_suspend_keyboard = false;
+
+    int m_invert_x, m_invert_y; // +1 for no inversion in the axis, -1 otherwise
+
     Controller(int t_invert_x, int t_invert_y);
 
-    key_map m_keyMap{50};
-    int m_invert_x, m_invert_y; // +1 for no inversion in the axis, -1 otherwise
+    virtual void performMove(Vector2i vec, int timer) = 0;
+    virtual void performActuation(int actuator, int duration, int delay) = 0;
 };
 
 #endif // CONTROLLER_H

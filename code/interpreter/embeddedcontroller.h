@@ -31,18 +31,19 @@ public:
     // Set a controller as the active controller
     void bind_controller(std::shared_ptr<Controller> *controller_ptr);
     // Send a movement to the active controller
-    bool send_movement(Vector2i &move_vector);
+    bool send_movement(Vector2i &move_vector, int dt);
 };
 
 namespace Embedded {
     // Embedded move function exposed to Python API
-    static PyObject *emb_move(PyObject *self, PyObject *args) {
+    static PyObject *emb_move(PyObject *, PyObject *args) {
         int x = 0;
         int y = 0;
-        if (!PyArg_ParseTuple(args, "ii", &x, &y))
+        int dt = 1000;
+        if (!PyArg_ParseTuple(args, "ii|i", &x, &y, &dt))
             return PyLong_FromLong(-1);
         Vector2i move_vector(x, y);
-        bool res = EmbeddedController::getInstance().send_movement(move_vector);
+        bool res = EmbeddedController::getInstance().send_movement(move_vector, dt);
         return PyLong_FromLong(res);
     }
 

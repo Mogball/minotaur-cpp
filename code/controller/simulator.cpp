@@ -4,20 +4,13 @@ Simulator::Simulator(int t_invert_x, int t_invert_y) :
         Controller(t_invert_x, t_invert_y) {
 }
 
-void Simulator::move(Vector2i dir, int timer) {
-    // Update the robot position
-#ifndef NDEBUG
-    Logger::log("Moved " + dir.toString() + " in " + std::to_string(timer) + " sec", Logger::DEBUG);
-#endif
-    dir.x_comp *= m_invert_x;
-    dir.y_comp *= m_invert_y;
-    robot_pos += dir;
+void Simulator::performMove(Vector2i vec, int timer) {
 
-    // Update the graphics scene
-    //m_simulator_scene->update();
 }
 
-Vector2i *Simulator::getRobotPos() {
-    return &robot_pos;
-}
+void Simulator::performActuation(int actuator, int duration, int delay) {
+    int actuator_keys[] = {Qt::Key_Left, Qt::Key_Right, Qt::Key_Up, Qt::Key_Down};
+    if (actuator < 0) { actuator = 0; }
+    else if (actuator > 3) { actuator = 3; }
 
+}

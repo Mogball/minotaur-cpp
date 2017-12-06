@@ -6,16 +6,22 @@
 
 class SimulatorScene;
 
-// Simulated controller, which directs inputs to an on-screen robot
+/**
+ *
+ */
 class Simulator : public Controller {
 public:
-    Simulator(int t_invert_x = 1, int t_invert_y = 1);
-    void move(Vector2i dir, int timer);
-    // Get (x,y) position of the robot
-    Vector2i *getRobotPos();
+    explicit Simulator(int t_invert_x = 1, int t_invert_y = 1);
 
-private:
-    Vector2i robot_pos;
+protected:
+    void performMove(Vector2i vec, int timer) override;
+
+    void performActuation(int actuator, int duration, int delay) override;
+};
+
+class TimerDelegate : public QObject {
+Q_OBJECT
+
 };
 
 #endif // SIMULATOR_H

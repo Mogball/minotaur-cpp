@@ -40,31 +40,43 @@ void Controller::invertAxis(Axis axis) {
     }
 }
 
+void Controller::suspendKeyboard(bool suspend) {
+    m_suspend_keyboard = suspend;
+}
+
 void Controller::keyPressed(int key) {
+    // Ignore keyboard when it is suspended
+    if (m_suspend_keyboard) {
+        return;
+    }
 #ifndef NDEBUG
     Logger::log("Keypressed " + std::to_string(key), Logger::DEBUG);
 #endif
-    auto it = m_keyMap.find(key);
-    if (it != m_keyMap.end()) {
-        m_keyMap.erase(key);
+    auto it = m_key_map.find(key);
+    if (it != m_key_map.end()) {
+        m_key_map.erase(key);
     }
-    m_keyMap.insert(key_press(key, true));
+    m_key_map.insert(key_press(key, true));
 }
 
 void Controller::keyReleased(int key) {
+    // Ignore keyboard when it is suspended
+    if (m_suspend_keyboard) {
+        return;
+    }
 #ifndef NDEBUG
     Logger::log("Keyreleased " + std::to_string(key), Logger::DEBUG);
 #endif
-    auto it = m_keyMap.find(key);
-    if (it != m_keyMap.end()) {
-        m_keyMap.erase(key);
+    auto it = m_key_map.find(key);
+    if (it != m_key_map.end()) {
+        m_key_map.erase(key);
     }
-    m_keyMap.insert(key_press(key, false));
+    m_key_map.insert(key_press(key, false));
 }
 
 bool Controller::isKeyDown(int key) {
-    auto it = m_keyMap.find(key);
-    if (it == m_keyMap.end()) {
+    auto it = m_key_map.find(key);
+    if (it == m_key_map.end()) {
         return false;
     }
     return it->second;
@@ -72,4 +84,8 @@ bool Controller::isKeyDown(int key) {
 
 void Controller::move(Dir dir, int timer) {
     move(Controller::toVec2(dir), timer);
+}
+
+void Controller::move(Vector2i vec, int timer) {
+
 }

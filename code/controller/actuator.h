@@ -30,16 +30,20 @@ enum ZaberCmd {
 class Actuator : public Controller
 {
 public:
-    Actuator(const QString& serial_port = "",
+    explicit Actuator(const QString& serial_port = "",
         const PortSettings& settings = DEFAULT_SETTINGS,
         QextSerialPort::QueryMode mode = QextSerialPort::EventDriven);
 
     Actuator(const Actuator&);
+    ~Actuator();
+
     int setSerPort(const QString& serial_port);
     int changeSettings(const PortSettings& settings);
     void switchDevices();
-    void move(Vector2i dir, int timer);
-    ~Actuator();
+
+protected:
+    void performMove(Vector2i dir, int timer) override;
+    void performActuation(int actuator, int duration, int delay) override;
 
 private:
     QextSerialPort* m_serial_port;
@@ -49,7 +53,7 @@ private:
     static char* const convertDataToBytes(long int data);
     void resetDeviceNumber();
     static int const intPow(int x, int p);
-    void moveActuator(unsigned char device, const int value, const int time);
+    void moveActuator(unsigned char device, int value, int time);
 };
 
 #endif // ACTUATOR_H

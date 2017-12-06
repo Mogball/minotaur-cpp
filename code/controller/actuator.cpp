@@ -102,7 +102,7 @@ Actuator::~Actuator() {
     delete m_serial_port;
 }
 
-void Actuator::move(Vector2i dir, int timer) {
+void Actuator::performMove(Vector2i dir, int timer) {
     bool success = true;
 #ifndef NDEBUG
     Logger::log("Attempting move (" + std::to_string(dir.x_comp) + ", " + std::to_string(dir.y_comp) + ")",
@@ -162,10 +162,9 @@ void Actuator::moveActuator(const unsigned char device, const int value, const i
                 m_serial_port->write(instr, CMD_SIZE + DATA_SIZE);
             } else {
                 delete instr;
-                std::string error_msg = "ERROR: Failed to write to serial port "
-                    + (m_serial_port->portName()).toStdString() +
-                    " because it's not open.";
-                throw error_msg;
+                throw "ERROR: Failed to write to serial port "
+                      + (m_serial_port->portName()).toStdString() +
+                      " because it's not open.";
             }
 
             std::this_thread::sleep_for(sleep_step);
@@ -173,12 +172,16 @@ void Actuator::moveActuator(const unsigned char device, const int value, const i
 
         delete instr;
     }
-    catch (std::string e) {
+    catch (std::string &e) {
         throw e;
     }
     catch (...) {
         throw std::current_exception();
     }
+}
+
+void Actuator::performActuation(int actuator, int duration, int delay) {
+    // TODO
 }
 
 //TODO: Add static method for getting current configuration of a given port
