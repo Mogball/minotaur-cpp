@@ -59,7 +59,7 @@ private:
     /**
      * Render scene reference.
      */
-    RenderSceneBase *m_renderScene;
+    RenderSceneBase *m_render_scene;
     /**
      * Current position vector.
      */
@@ -85,6 +85,10 @@ private:
      * Coefficient of state friction on this SAM.
      */
     float m_fric;
+    /**
+     * Current orientation of SAM from the positive x-axis.
+     */
+    float m_theta;
 };
 
 

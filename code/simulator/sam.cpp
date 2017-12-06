@@ -2,18 +2,19 @@
 #include "solenoid.h"
 
 SAMRobot::SAMRobot(RenderSceneBase *scene, float mu_s, float mass, float length)
-        : m_renderScene(scene),
+        : m_render_scene(scene),
           m_fric(mu_s),
           m_mass(mass),
           m_len(length),
           m_pos(0, 0),
-          m_vel(0, 0) {
+          m_vel(0, 0),
+          m_theta(0) {
 }
 
 void SAMRobot::draw(QPainter *painter, QPaintEvent *, int elapsed, float scale) {
     // Update phase
     float dt = elapsed / 1000.0f;
-    const std::vector<Solenoid> *solenoids = m_renderScene->solenoids();
+    const std::vector<Solenoid> *solenoids = m_render_scene->solenoids();
     m_mag.setX(0);
     m_mag.setY(0);
     for (auto &solenoid : *solenoids) {
@@ -38,11 +39,13 @@ void SAMRobot::draw(QPainter *painter, QPaintEvent *, int elapsed, float scale) 
 
     m_pos += dt * m_vel;
     // Render phase
-    float theta = atan2f(m_vel.y(), m_vel.x());
+    if (m_vel.y() != 0 || m_vel.x() != 0) {
+        m_theta = atan2f(m_vel.y(), m_vel.x());
+    }
     float l2 = m_len * scale / 2.0f;
-    float lx = l2 * cosf(theta);
-    float ly = l2 * sinf(theta);
-    vector2f center = m_renderScene->center();
+    float lx = l2 * cosf(m_theta);
+    float ly = l2 * sinf(m_theta);
+    vector2f center = m_render_scene->center();
     float tx = m_pos.x() * scale + center.x();
     float ty = -m_pos.y() * scale + center.y();
     const pointf vertices[4] = {
