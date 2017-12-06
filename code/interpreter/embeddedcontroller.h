@@ -53,13 +53,17 @@ namespace Embedded {
         int actuator = 0;
         int delay = 0;
         int duration = 1000;
-
+        if (!PyArg_ParseTuple(args, "i|ii", &actuator, &delay, &duration))
+            return PyLong_FromLong(-1);
+        bool res = EmbeddedController::getInstance().send_actuation(actuator, delay, duration);
+        return PyLong_FromLong(res);
     }
 
     // Embedded python configuration which describes which methods
     // should be exposed in which module
     static PyMethodDef emb_methods[]{
             {"move",  emb_move, METH_VARARGS, "Send move command to active controller."},
+            {"actuate", emb_actuate, METH_VARARGS, "Send actuate command to active controller."},
             {nullptr, nullptr, 0, nullptr}
     };
     // Method 'move' is exposed in module 'emb' as 'emb.move'
