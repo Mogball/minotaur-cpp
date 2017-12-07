@@ -1,4 +1,5 @@
 #include <QGridLayout>
+#include <utility>
 #include "simulatorwindow.h"
 #include "ui_simulatorwindow.h"
 #include "mainwindow.h"
@@ -9,7 +10,7 @@ SimulatorWindow::SimulatorWindow(std::shared_ptr<Simulator> simulator, QWidget *
     ui->setupUi(this);
     setWindowTitle("Simulator");
 
-    m_simulator_scene = new RenderScene(simulator, this);
+    m_simulator_scene = new RenderScene(std::move(simulator), this);
     ui->renderLayout->addWidget(m_simulator_scene);
 
     // Prevent resizing

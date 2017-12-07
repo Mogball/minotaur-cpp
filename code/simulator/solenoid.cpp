@@ -20,7 +20,7 @@ float Solenoid::getCurrent() {
     return m_I;
 }
 
-inline float Solenoid::getA(float x, float y) const {
+inline float Solenoid::getA(float x, float y) {
     return powf((powf(x, 2.0f) + powf(y, 2.0f)), -1.5f);
 }
 
@@ -54,8 +54,8 @@ Solenoid::fieldAt(const vector2f &Q) const {
     float l2 = m_len / 2.0f;
     float yp1 = Qp.y() - l2;
     float yp2 = Qp.y() + l2;
-    float a1 = getA(Qp.x(), yp1);
-    float a2 = getA(Qp.x(), yp2);
+    float a1 = Solenoid::getA(Qp.x(), yp1);
+    float a2 = Solenoid::getA(Qp.x(), yp2);
     float Bx = k * Qp.x() * (a1 - a2);
     float By = k * (yp1 * a1 - yp2 * a2);
     return rotate(vector2f(Bx, By), m_theta);

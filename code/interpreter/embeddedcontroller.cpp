@@ -1,6 +1,7 @@
 #include "embeddedcontroller.h"
 
 #include "../controller/simulator.h"
+#include "../simulator/renderscene.h"
 #include "../simulator/sam.h"
 
 EmbeddedController::EmbeddedController() :
@@ -67,4 +68,13 @@ bool EmbeddedController::set_derivative(double K_d) {
         return true;
     }
     return false;
+}
+
+std::tuple<float, float> EmbeddedController::cal_currents(float v2x, float v2y) {
+    if (!m_controller_ptr || !*m_controller_ptr) { std::make_tuple(0, 0); }
+    auto p_simulator = std::dynamic_pointer_cast<Simulator>(*m_controller_ptr);
+    if (p_simulator != nullptr) {
+        return dynamic_cast<RenderScene *>(p_simulator->getRenderScene())->calculateCurrents(RenderScene::vector2f(v2x, v2y), 10);
+    }
+    return std::make_tuple(0, 0);
 }

@@ -70,6 +70,7 @@ public:
     void powerVertical(double current) override;
     void powerHorizontal(double current) override;
     void suspendControls(bool suspend) override;
+    void requestVelocity(vector2f v2, int time_step) override;
 
     /**
      * Start the ticker.
@@ -79,6 +80,8 @@ public:
      * Stop the ticker.
      */
     void stopRender();
+
+    std::tuple<float, float> calculateCurrents(vector2f v2, int time_step);
 
 private:
     /**

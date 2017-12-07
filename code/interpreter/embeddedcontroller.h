@@ -40,6 +40,7 @@ public:
     bool set_proportion(double K_p);
     bool set_integral(double K_i);
     bool set_derivative(double K_d);
+    std::tuple<float, float> cal_currents(float, float);
 };
 
 namespace Embedded {
@@ -84,6 +85,38 @@ namespace Embedded {
         return PyLong_FromLong(res);
     }
 
+    static PyObject *sim_set_prop(PyObject *, PyObject *args) {
+        double K_p;
+        if (!PyArg_ParseTuple(args, "d", &K_p))
+            return PyLong_FromLong(-1);
+        bool res = EmbeddedController::getInstance().set_proportion(K_p);
+        return PyLong_FromLong(res);
+    }
+
+    static PyObject *sim_set_integ(PyObject *, PyObject *args) {
+        double K_i;
+        if (!PyArg_ParseTuple(args, "d", &K_i))
+            return PyLong_FromLong(-1);
+        bool res = EmbeddedController::getInstance().set_integral(K_i);
+        return PyLong_FromLong(res);
+    }
+
+    static PyObject *sim_set_deriv(PyObject *, PyObject *args) {
+        double K_d;
+        if (!PyArg_ParseTuple(args, "d", &K_d))
+            return PyLong_FromLong(-1);
+        bool res = EmbeddedController::getInstance().set_derivative(K_d);
+        return PyLong_FromLong(res);
+    }
+
+    static PyObject *sim_test(PyObject *, PyObject *args) {
+        float v2x, v2y;
+        PyArg_ParseTuple(args, "ff", &v2x, &v2y);
+        float Ih, Iv;
+        std::tie(Ih, Iv) = EmbeddedController::getInstance().cal_currents(v2x, v2y);
+        return Py_BuildValue("ff", Ih, Iv);
+    }
+
     // Embedded python configuration which describes which methods
     // should be exposed in which module
     static PyMethodDef emb_methods[]{
@@ -100,6 +133,10 @@ namespace Embedded {
 
     static PyMethodDef sim_methods[]{
             {"reset", sim_reset, METH_VARARGS, "Reset the simulator state"},
+            {"kp", sim_set_prop, METH_VARARGS, "Set K_p"},
+            {"ki", sim_set_integ, METH_VARARGS, "Set K_i"},
+            {"kd", sim_set_deriv, METH_VARARGS, "Set K_d"},
+            {"test", sim_test, METH_VARARGS, "Test function"},
             {nullptr, nullptr, 0, nullptr}
     };
     static PyModuleDef sim_module {

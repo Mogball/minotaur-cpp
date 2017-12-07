@@ -16,6 +16,7 @@
 class Solenoid : public Drawable {
 public:
     Solenoid() = default;
+
     /**
      * Create a solenoid.
      *
@@ -37,6 +38,7 @@ public:
      * @return the magnetic field vector at that position
      */
     vector2f fieldAt(const vector2f &Q) const;
+
     /**
      * Set the current passing through the solenoid,
      * which influences the produced magnetic field. Current of zero
@@ -45,6 +47,7 @@ public:
      * @param i current of the solenoid
      */
     void setCurrent(float i);
+
     /**
      * @return the current of the solenoid
      */
@@ -56,7 +59,16 @@ public:
      * @param painter the painter to use
      * @param scale   the scale to use (pixels / m)
      */
-    void draw(QPainter *painter, QPaintEvent *, int, float scale) override ;
+    void draw(QPainter *painter, QPaintEvent *, int, float scale) override;
+
+    /**
+     * Helper scene for computing magnetic fields.
+     *
+     * @param x the x-coordinate
+     * @param y the y-coordinate
+     * @return coefficient
+     */
+    static float getA(float x, float y);
 
 private:
     /**
@@ -92,15 +104,6 @@ private:
      * Pointer to the reference scene.
      */
     const RenderSceneBase *m_renderScene;
-
-    /**
-     * Helper scene for computing magnetic fields.
-     *
-     * @param x the x-coordinate
-     * @param y the y-coordinate
-     * @return coefficient
-     */
-    float getA(float x, float y) const;
 };
 
 

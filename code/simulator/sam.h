@@ -54,6 +54,8 @@ public:
      */
     const vector2f &mag() const;
 
+    const float mass() const;
+
 private:
 
     /**

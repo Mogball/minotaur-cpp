@@ -27,6 +27,7 @@ public:
     virtual void powerVertical(double current) = 0;
     virtual void powerHorizontal(double current) = 0;
     virtual void suspendControls(bool suspend) = 0;
+    virtual void requestVelocity(vector2f v2, int time_step) = 0;
 };
 
 #endif //MINOTAUR_CPP_RENDERSCENEBASE_H

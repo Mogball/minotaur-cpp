@@ -73,6 +73,10 @@ SAMRobot::mag() const {
     return m_mag;
 }
 
+const float SAMRobot::mass() const {
+    return m_mass;
+}
+
 void SAMRobot::stop() {
     m_vel.setX(0);
     m_vel.setY(0);

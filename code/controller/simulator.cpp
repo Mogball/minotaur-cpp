@@ -2,6 +2,7 @@
 #include "../simulator/sam.h"
 
 #include <QTimer>
+#include <chrono>
 
 Simulator::Simulator(int t_invert_x, int t_invert_y) :
         Controller(t_invert_x, t_invert_y) {
@@ -138,14 +139,19 @@ void MoveToDelegate::startControl() {
     double K_p = m_K_p;
     double K_i = m_K_i;
     double K_d = m_K_d;
-    double amp = 1000;
+    double amp = 10;
     long long int time_start = time_now;
     unsigned long time_step = 10;
     while (m_time_elapsed < m_duration) {
         double u_x = K_p * m_err_x + K_i * m_integral_x + K_d + m_deriv_x;
         double u_y = K_p * m_err_y + K_i * m_integral_y + K_d + m_deriv_y;
-        m_simulator->getRenderScene()->powerHorizontal(u_x * amp);
-        m_simulator->getRenderScene()->powerVertical(u_y * amp);
+        m_simulator->getRenderScene()->requestVelocity(
+                RenderSceneBase::vector2f(
+                        static_cast<float>(amp * u_x),
+                        static_cast<float>(amp * u_y)
+                ),
+                static_cast<int>(time_step)
+        );
         QThread::msleep(time_step);
         m_curr_x = m_simulator->getRenderScene()->sam()->pos().x();
         m_curr_y = m_simulator->getRenderScene()->sam()->pos().y();
@@ -169,6 +175,6 @@ void MoveToDelegate::startControl() {
     m_simulator->getRenderScene()->powerVertical(0);
     m_simulator->getRenderScene()->suspendControls(false);
 #ifndef NDEBUG
-    Logger::debug("Completed move_to command");
+    Logger::debug("Completed with SAM at (" + std::to_string(m_curr_x) + ", " + std::to_string(m_curr_y) + ")");
 #endif
 }
