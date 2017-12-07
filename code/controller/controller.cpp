@@ -91,7 +91,7 @@ void Controller::move(Vector2i vec, int timer) {
 }
 
 void Controller::moveTo(int x, int y, int duration, int delay) {
-    double scale = 100;
+    double scale = 1000;
     performMoveTo(x / scale, y / scale, duration, delay);
 }
 

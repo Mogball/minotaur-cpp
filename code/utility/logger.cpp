@@ -9,7 +9,7 @@ void Logger::setStream(QTextEdit *log_stream) {
 }
 
 //TODO: Overload ostream operator
-bool Logger::log(std::string message, LogType type) {
+bool Logger::log(const std::string &message, LogType type) {
     std::string color = Logger::getTextColor(type);
     Logger::m_buffer = "<font color=\"" + color + "\">" + ClockTime::getCurrentTime() + message + "</font>";
 
@@ -22,14 +22,16 @@ bool Logger::log(std::string message, LogType type) {
     return true;
 }
 
-bool Logger::info(std::string message) {
-    Logger::log(message, Logger::INFO);
+bool Logger::info(const std::string &message) {
+    return Logger::log(message, Logger::INFO);
 }
 
-bool Logger::debug(std::string message) {
-    Logger::log(message, Logger::DEBUG);
+#ifndef NDEBUG
+bool Logger::debug(const std::string &message) {
+    return Logger::log(message, Logger::DEBUG);
 }
+#endif
 
-bool Logger::fatal(std::string message) {
-    Logger::log(message, Logger::FATAL);
+bool Logger::fatal(const std::string &message) {
+    return Logger::log(message, Logger::FATAL);
 }

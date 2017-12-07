@@ -66,7 +66,7 @@ protected:
 
     virtual void performMove(Vector2i vec, int timer) = 0;
     virtual void performActuation(int actuator, int duration, int delay) = 0;
-    virtual void performMoveTo(double x, double y, int duration, int delay);
+    virtual void performMoveTo(double x, double y, int duration, int delay) = 0;
 };
 
 #endif // CONTROLLER_H

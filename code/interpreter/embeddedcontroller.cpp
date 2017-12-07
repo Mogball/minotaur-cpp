@@ -1,5 +1,8 @@
 #include "embeddedcontroller.h"
 
+#include "../controller/simulator.h"
+#include "../simulator/sam.h"
+
 EmbeddedController::EmbeddedController() :
         m_controller_ptr(nullptr) {}
 
@@ -24,4 +27,44 @@ bool EmbeddedController::send_movement_to(int x, int y, int duration, int delay)
     if (!m_controller_ptr || !*m_controller_ptr) { return false; }
     (*m_controller_ptr)->moveTo(x, y, duration, delay);
     return true;
+}
+
+bool EmbeddedController::reset_simulator() {
+    if (!m_controller_ptr || !*m_controller_ptr) { return false; }
+    auto p_simulator = std::dynamic_pointer_cast<Simulator>(*m_controller_ptr);
+    if (p_simulator != nullptr) {
+        p_simulator->getRenderScene()->sam()->reset();
+        return true;
+    }
+    return false;
+}
+
+bool EmbeddedController::set_proportion(double K_p) {
+    if (!m_controller_ptr || !*m_controller_ptr) { return false; }
+    auto p_simulator = std::dynamic_pointer_cast<Simulator>(*m_controller_ptr);
+    if (p_simulator != nullptr) {
+        p_simulator->setProportionConstant(K_p);
+        return true;
+    }
+    return false;
+}
+
+bool EmbeddedController::set_integral(double K_i) {
+    if (!m_controller_ptr || !*m_controller_ptr) { return false; }
+    auto p_simulator = std::dynamic_pointer_cast<Simulator>(*m_controller_ptr);
+    if (p_simulator != nullptr) {
+        p_simulator->setIntegralConstant(K_i);
+        return true;
+    }
+    return false;
+}
+
+bool EmbeddedController::set_derivative(double K_d) {
+    if (!m_controller_ptr || !*m_controller_ptr) { return false; }
+    auto p_simulator = std::dynamic_pointer_cast<Simulator>(*m_controller_ptr);
+    if (p_simulator != nullptr) {
+        p_simulator->setDerivativeConstant(K_d);
+        return true;
+    }
+    return false;
 }

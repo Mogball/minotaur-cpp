@@ -81,5 +81,9 @@ void SAMRobot::stop() {
 void SAMRobot::reset() {
     m_pos.setX(0);
     m_pos.setY(0);
-    stop();
+    m_vel.setX(0);
+    m_vel.setY(0);
+    m_mag.setX(0);
+    m_mag.setY(0);
+    m_theta = 0;
 }

@@ -65,7 +65,11 @@ public:
     /**
      * @return a pointer to the Sam instance.
      */
-    const SAMRobot *sam() const override;
+    SAMRobot *sam() override;
+
+    void powerVertical(double current) override;
+    void powerHorizontal(double current) override;
+    void suspendControls(bool suspend) override;
 
     /**
      * Start the ticker.
@@ -99,6 +103,8 @@ private:
      * Object representing the location of SAM.
      */
     SAMRobot m_sam;
+
+    bool m_controls_active;
 };
 
 

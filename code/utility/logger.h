@@ -16,10 +16,14 @@ public:
 
         NUM_LOG_TYPES
     };
-    static bool log(std::string message, LogType type = INFO);
-    static bool debug(std::string message);
-    static bool info(std::string message);
-    static bool fatal(std::string message);
+    static bool log(const std::string &message, LogType type = INFO);
+
+#ifndef NDEBUG
+    static bool debug(const std::string &message);
+#endif
+    static bool info(const std::string &message);
+    static bool fatal(const std::string &message);
+
     static void setStream(QTextEdit* log_stream);
 
 private:

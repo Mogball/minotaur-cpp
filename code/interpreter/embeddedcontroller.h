@@ -34,6 +34,12 @@ public:
     bool send_movement(Vector2i &move_vector, int dt);
     bool send_actuation(int actuator, int duration, int delay);
     bool send_movement_to(int x, int y, int duration, int delay);
+
+    // Simulator specific commands
+    bool reset_simulator();
+    bool set_proportion(double K_p);
+    bool set_integral(double K_i);
+    bool set_derivative(double K_d);
 };
 
 namespace Embedded {
@@ -71,6 +77,13 @@ namespace Embedded {
         return PyLong_FromLong(res);
     }
 
+    static PyObject *sim_reset(PyObject *, PyObject *args) {
+        if (!PyArg_ParseTuple(args, ""))
+            return PyLong_FromLong(-1);
+        bool res = EmbeddedController::getInstance().reset_simulator();
+        return PyLong_FromLong(res);
+    }
+
     // Embedded python configuration which describes which methods
     // should be exposed in which module
     static PyMethodDef emb_methods[]{
@@ -80,12 +93,25 @@ namespace Embedded {
             {nullptr, nullptr, 0, nullptr}
     };
     // Method 'move' is exposed in module 'emb' as 'emb.move'
-    static PyModuleDef emb_module{
+    static PyModuleDef emb_module {
             PyModuleDef_HEAD_INIT, "emb", nullptr, -1, emb_methods,
             nullptr, nullptr, nullptr, nullptr
     };
+
+    static PyMethodDef sim_methods[]{
+            {"reset", sim_reset, METH_VARARGS, "Reset the simulator state"},
+            {nullptr, nullptr, 0, nullptr}
+    };
+    static PyModuleDef sim_module {
+            PyModuleDef_HEAD_INIT, "sim", nullptr, -1, sim_methods,
+            nullptr, nullptr, nullptr, nullptr
+    };
+
     static PyObject *PyInit_emb() {
         return PyModule_Create(&emb_module);
+    }
+    static PyObject *PyInit_sim() {
+        return PyModule_Create(&sim_module);
     }
 }
 

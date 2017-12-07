@@ -19,6 +19,7 @@ MainWindow::MainWindow(QWidget *parent, const char *) :
     // Bind controller to Python Engine
     EmbeddedController::getInstance().bind_controller(&m_controller);
     PythonEngine::getInstance().append_module("emb", &Embedded::PyInit_emb);
+    PythonEngine::getInstance().append_module("sim", &Embedded::PyInit_sim);
 
     // Setup subwindows
     actuator_setup_window = new ActuatorSetup(m_actuator, this);
